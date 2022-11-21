@@ -1,0 +1,1 @@
+CREATE TABLE users (id BIGINT, name varchar(255), lastName varchar(255), age smallint);
