@@ -61,10 +61,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void removeUserById(long id) {
         User user = new User();
-        Session session = null;
         Transaction transaction = null;
-        try {
-            session = Util.getSession().openSession();
+        try (Session  session = Util.getSession().openSession();){
             transaction = session.beginTransaction();
             user = (User) session.load(User.class, id);
             session.delete(user);
@@ -74,8 +72,6 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction == null) {
                 transaction.rollback();
             }
-        } finally {
-            session.close();
         }
     }
 
@@ -90,10 +86,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        Session session = null;
         Transaction transaction = null;
-        try {
-            session = Util.getSession().openSession();
+        try (Session session = Util.getSession().openSession();){
             String sql = "TRUNCATE  TABLE users";
             transaction = session.beginTransaction();
             Query query = session.createNativeQuery(sql);
@@ -103,8 +97,6 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction == null) {
                 transaction.rollback();
             }
-        } finally {
-            session.close();
         }
     }
 }
