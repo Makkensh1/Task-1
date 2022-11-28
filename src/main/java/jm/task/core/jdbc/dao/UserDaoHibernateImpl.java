@@ -36,7 +36,6 @@ public class UserDaoHibernateImpl implements UserDao {
             Query query = session.createSQLQuery(sql).addEntity(User.class);
             query.executeUpdate();
             session.getTransaction().commit();
-
         } catch (Exception e) {
 
         }
@@ -46,8 +45,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         User newUser = new User(name, lastName, age);
         Transaction transaction = null;
-        try {
-            Session session = Util.getSession().openSession();
+        try (Session session = Util.getSession().openSession()){
             transaction = session.beginTransaction();
             session.save(newUser);
             transaction.commit();
@@ -87,7 +85,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         Transaction transaction = null;
-        try (Session session = Util.getSession().openSession();){
+        try (Session session = Util.getSession().openSession()){
             String sql = "TRUNCATE  TABLE users";
             transaction = session.beginTransaction();
             Query query = session.createNativeQuery(sql);
